@@ -48,10 +48,10 @@ app.use('/upload1', express.static(path.join(__dirname, 'upload1')));
 
 Connection();
 app.use('/', userRoutes);
-module.exports = app;
-// const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
 
-// server.listen(port, () => {
-//   console.log("Server is running on port", port);
-// });
+server.listen(port, () => {
+  console.log("Server is running on port", port);
+});
+// module.exports = app;
 

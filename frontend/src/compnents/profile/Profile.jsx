@@ -9,12 +9,19 @@ import defaultProfilePicture from "./download2.jpg";
 const Profile = () => {
   const [userDetails, setUserDetails] = useState(null);
   const { username } = useParams();
+  const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/${username}/getuserdetails`
+          `${backendUrl}/${username}/getuserdetails`
         );
         setUserDetails(response.data);
       } catch (error) {
@@ -68,7 +75,7 @@ const Profile = () => {
                   alt="Profile"
                   src={
                     userDetails.profilePicture
-                      ? `http://localhost:8000/${userDetails.profilePicture}`
+                      ? `process.env.BACKEND_URL/${userDetails.profilePicture}`
                       : defaultProfilePicture
                   }
                   className="w-40 h-40 object-cover rounded-full border-4 border-[#a729f5] shadow-xl"

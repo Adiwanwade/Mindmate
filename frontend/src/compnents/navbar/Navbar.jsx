@@ -24,11 +24,18 @@ const Navbar = () => {
     setIsLoggedIn(false);
     navigate("/login");
   };
+const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 
   const handleDelete = () => setShowDeleteModal(true);
   const confirmDelete = async () => {
     try {
-      await fetch(`http://localhost:8000/delete-user/${user}`, {
+      await fetch(`${backendUrl}/delete-user/${user}`, {
         method: "DELETE",
       });
       localStorage.removeItem("token");

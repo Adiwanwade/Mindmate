@@ -39,7 +39,7 @@ const Home2 = () => {
             },
             {
               title: "Schizophrenia",
-              img: "https://i0.wp.com/mindsitenews.org/wp-content/uploads/2023/09/shutterstock_1519533587-schizophrenia.jpeg?resize=780%2C780&ssl=1",
+              img: "https://myfitbrain.in/images/Schizophrenia_1613450529.jpg",
               link: "https://www.who.int/news-room/fact-sheets/detail/schizophrenia",
             },
             {

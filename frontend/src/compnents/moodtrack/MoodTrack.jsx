@@ -19,10 +19,17 @@ const MoodTrack = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [moodData, setMoodData] = useState([]);
   const username = localStorage.getItem("tokenUser");
+const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/moods/${username}`)
+      .get(`${backendUrl}/api/moods/${username}`)
       .then((response) => setMoodData(response.data))
       .catch((error) => console.error("Error fetching mood data:", error));
   }, [username]);
@@ -34,7 +41,7 @@ const MoodTrack = () => {
 
   const handleMoodSelect = (selectedMood) => {
     axios
-      .post(`http://localhost:8000/api/moods/${username}`, {
+      .post(`process.env.BACKEND_URL/api/moods/${username}`, {
         date: selectedDate,
         mood: selectedMood,
       })

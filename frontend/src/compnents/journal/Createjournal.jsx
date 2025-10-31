@@ -1,50 +1,57 @@
-import React, { useState } from 'react';
-import Navbar from '../navbar/Navbar';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import Navbar from "../navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const CreateJournal = () => {
-  const [title, setTitle] = useState('');
-  const [article, setArticle] = useState('');
-  const [tags, setTags] = useState('');
+  const [title, setTitle] = useState("");
+  const [article, setArticle] = useState("");
+  const [tags, setTags] = useState("");
   const [coverPicture, setCoverPicture] = useState(null);
-  const user = localStorage.getItem('tokenUser');
+  const user = localStorage.getItem("tokenUser");
   const navigate = useNavigate();
+  const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('article', article);
-    formData.append('tags', tags);
+    formData.append("title", title);
+    formData.append("article", article);
+    formData.append("tags", tags);
 
     if (coverPicture) {
-      formData.append('coverPicture', coverPicture);
+      formData.append("coverPicture", coverPicture);
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/${user}`, {
-        method: 'POST',
+      const response = await fetch(`${backendUrl}/${user}`, {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${user}`
+          Authorization: `Bearer ${user}`,
         },
-        body: formData
+        body: formData,
       });
 
       if (response.ok) {
         const newJournal = await response.json();
-        console.log('Journal created:', newJournal);
+        console.log("Journal created:", newJournal);
         // Clear the form
-        setTitle('');
-        setArticle('');
-        setTags('');
+        setTitle("");
+        setArticle("");
+        setTags("");
         setCoverPicture(null);
         navigate(`/${user}/profile`);
       } else {
-        console.error('Failed to create journal');
+        console.error("Failed to create journal");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -57,12 +64,22 @@ const CreateJournal = () => {
       <Navbar />
       <div className="w-screen mt-32">
         <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-md">
-        <div className="px-6 py-4" style={{ background: 'linear-gradient(to right, #D1D5DB, #E5E7EB, #F3F4F6)' }}>
-
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Journal</h2>
+          <div
+            className="px-6 py-4"
+            style={{
+              background:
+                "linear-gradient(to right, #D1D5DB, #E5E7EB, #F3F4F6)",
+            }}
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Create Journal
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="title"
+                >
                   Title
                 </label>
                 <input
@@ -75,7 +92,10 @@ const CreateJournal = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="article">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="article"
+                >
                   Article
                 </label>
                 <textarea
@@ -87,7 +107,10 @@ const CreateJournal = () => {
                 ></textarea>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tags">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="tags"
+                >
                   Tags
                 </label>
                 <input
@@ -100,7 +123,10 @@ const CreateJournal = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="coverPicture">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="coverPicture"
+                >
                   Cover Picture
                 </label>
                 <input
@@ -115,9 +141,9 @@ const CreateJournal = () => {
                   className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="button"
                   onClick={() => {
-                    setTitle('');
-                    setArticle('');
-                    setTags('');
+                    setTitle("");
+                    setArticle("");
+                    setTags("");
                     setCoverPicture(null);
                   }}
                 >

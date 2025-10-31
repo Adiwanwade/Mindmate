@@ -8,7 +8,7 @@
 //   useEffect(() => {
 //     const fetchAnonymousPosts = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:8000/anonymousPosts');
+//         const response = await axios.get('process.env.BACKEND_URL/anonymousPosts');
 //         setAnonymousPosts(response.data);
 //       } catch (error) {
 //         console.error('Error fetching anonymous posts:', error);
@@ -59,21 +59,36 @@
 
 // export default AllAnonymousPost;
 
+import React, { useState, useEffect } from "react";
+import Navbar from "../navbar/Navbar";
+import axios from "axios";
 
-import React, { useState, useEffect } from 'react';
-import Navbar from '../navbar/Navbar';
-import axios from 'axios';
-
+// Prefer Create React App / Vite style env var name and provide a safe fallback.
+// In CRA/Vite use: REACT_APP_BACKEND_URL (or VITE_BACKEND_URL for Vite).
+const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 const AllAnonymousPost = () => {
   const [anonymousPosts, setAnonymousPosts] = useState([]);
 
   useEffect(() => {
     const fetchAnonymousPosts = async () => {
+      if (!backendUrl) {
+        console.warn(
+          "Backend URL is not set. Set REACT_APP_BACKEND_URL (or BACKEND_URL/VITE_BACKEND_URL) in your environment."
+        );
+        return;
+      }
+
       try {
-        const response = await axios.get('http://localhost:8000/anonymousPosts');
-        setAnonymousPosts(response.data);
+        const response = await axios.get(`${backendUrl}/anonymousPosts`);
+        setAnonymousPosts(response.data || []);
       } catch (error) {
-        console.error('Error fetching anonymous posts:', error);
+        console.error("Error fetching anonymous posts:", error);
       }
     };
     fetchAnonymousPosts();
@@ -120,6 +135,3 @@ const AllAnonymousPost = () => {
 };
 
 export default AllAnonymousPost;
-
-
-

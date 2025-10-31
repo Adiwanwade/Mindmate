@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Navbar from '../navbar/Navbar';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import Navbar from "../navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const AnonymousPost = () => {
-  const [title, setTitle] = useState('');
-  const [article, setArticle] = useState('');
-  const [tags, setTags] = useState('');
-  const user = localStorage.getItem('tokenUser');
+  const [title, setTitle] = useState("");
+  const [article, setArticle] = useState("");
+  const [tags, setTags] = useState("");
+  const user = localStorage.getItem("tokenUser");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,32 +15,42 @@ const AnonymousPost = () => {
     const postData = {
       title,
       article,
-      tags: tags.split(',').map(tag => tag.trim())
+      tags: tags.split(",").map((tag) => tag.trim()),
     };
+    const rawBackendUrl =
+  process.env.REACT_APP_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  process.env.VITE_BACKEND_URL;
+const backendUrl = rawBackendUrl
+  ? String(rawBackendUrl).replace(/\/$/, "")
+  : null;
 
     try {
-      const response = await fetch('http://localhost:8000/createAnonymousPosts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user}`
-        },
-        body: JSON.stringify(postData)
-      });
+      const response = await fetch(
+        `${backendUrl}/createAnonymousPosts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user}`,
+          },
+          body: JSON.stringify(postData),
+        }
+      );
 
       if (response.ok) {
         const newPost = await response.json();
-        console.log('Post created:', newPost);
+        console.log("Post created:", newPost);
         // Clear the form
-        setTitle('');
-        setArticle('');
-        setTags('');
+        setTitle("");
+        setArticle("");
+        setTags("");
         navigate(`/${user}/anonymoussharing`);
       } else {
-        console.error('Failed to create post');
+        console.error("Failed to create post");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
